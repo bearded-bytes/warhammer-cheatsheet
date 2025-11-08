@@ -4,11 +4,12 @@ output/
 __pycache__/
 .DS_Store
 
-# Generated cheat sheets (except examples)
+# Generated cheat sheets (except examples and docs)
 *.html
 *.md
 !examples/**/*.html
 !examples/**/*.md
+!docs/**/*.md
 !README.md
 !catalogues/README.md
 
