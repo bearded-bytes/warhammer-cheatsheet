@@ -1,0 +1,118 @@
+Redneck Bar Fighters (1620 Points)
+
+Space Marines
+Space Wolves
+Saga of the Hunter
+Strike Force (2,000 Points)
+
+CHARACTERS
+
+Arjac Rockfist (105 Points)
+  • 1x Foehammer
+
+Lieutenant (65 Points)
+  • 1x Heavy bolt pistol
+  • 1x Master-crafted bolter
+  • 1x Master-crafted power weapon
+
+Logan Grimnar (110 Points)
+  • Warlord
+  • 1x Axe Morkai
+  • 1x Storm bolter
+  • 1x Tyrnak and Fenrir
+
+Techmarine (65 Points)
+  • 1x Forge bolter
+  • 1x Grav-pistol
+  • 1x Omnissian power axe
+  • 1x Servo-arm
+  • Enhancements: Feral Rage
+
+Wolf Guard Battle Leader (70 Points)
+  • 1x Master-crafted power weapon
+  • 1x Storm Shield
+  • Enhancements: Wolf Master
+
+Wolf Priest (90 Points)
+  • 1x Absolvor bolt pistol
+  • 1x Crozius arcanum
+  • Enhancements: Swift Hunter
+
+BATTLELINE
+
+Blood Claws (135 Points)
+  • 1x Blood Claw Pack Leader
+     ◦ 1x Bolt pistol
+     ◦ 1x Power weapon
+  • 9x Blood Claw
+     ◦ 9x Astartes chainsword
+     ◦ 9x Bolt pistol
+
+Intercessor Squad (160 Points)
+  • 1x Intercessor Sergeant
+     ◦ 1x Bolt pistol
+     ◦ 1x Hand flamer
+     ◦ 1x Power weapon
+  • 9x Intercessor
+     ◦ 2x Astartes grenade launcher
+     ◦ 9x Bolt pistol
+     ◦ 9x Bolt rifle
+     ◦ 9x Close combat weapon
+
+DEDICATED TRANSPORTS
+
+Rhino (75 Points)
+  • 1x Armoured tracks
+  • 1x Hunter-killer missile
+  • 1x Storm bolter
+
+OTHER DATASHEETS
+
+Invictor Tactical Warsuit (125 Points)
+  • 1x Fragstorm grenade launcher
+  • 1x Heavy bolter
+  • 1x Incendium cannon
+  • 1x Invictor fist
+  • 1x Twin ironhail heavy stubber
+
+Reiver Squad (80 Points)
+  • 1x Reiver Sergeant
+     ◦ 1x Bolt carbine
+     ◦ 1x Close combat weapon
+     ◦ 1x Combat knife
+     ◦ 1x Grapnel Launcher
+     ◦ 1x Reiver Grav-chute
+     ◦ 1x Special issue bolt pistol
+  • 4x Reiver
+     ◦ 4x Bolt carbine
+     ◦ 4x Close combat weapon
+     ◦ 4x Grapnel Launcher
+     ◦ 4x Reiver Grav-chute
+     ◦ 4x Special issue bolt pistol
+
+Thunderwolf Cavalry (115 Points)
+  • 1x Thunderwolf Cavalry Pack Leader
+     ◦ 1x Boltgun
+     ◦ 1x Teeth and Claws
+     ◦ 1x Wolf Guard weapon
+  • 2x Thunderwolf Cavalry
+     ◦ 2x Boltgun
+     ◦ 2x Teeth and Claws
+     ◦ 2x Wolf Guard weapon
+
+Wolf Guard Terminators (340 Points)
+  • 1x Wolf Guard Terminator Pack Leader
+     ◦ 1x Master-crafted power weapon
+     ◦ 1x Storm bolter
+  • 5x Wolf Guard Terminator
+     ◦ 1x Assault cannon
+     ◦ 4x Master-crafted power weapon
+     ◦ 1x Power fist
+     ◦ 4x Storm Shield
+
+Wulfen (85 Points)
+  • 5x Wulfen
+     ◦ 5x Stormfrag auto-launcher
+     ◦ 5x Wulfen weapons
+
+Exported with App Version: v1.43.1 (1), Data Version: v708

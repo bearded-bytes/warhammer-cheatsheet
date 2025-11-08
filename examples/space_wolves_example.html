@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Redneck Bar Fighters - Cheat Sheet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.4;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        @media screen {
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            .no-print {
+                display: block;
+                text-align: center;
+                margin: 20px 0;
+            }
+
+            .print-button {
+                background: #2196F3;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+
+            .print-button:hover {
+                background: #1976D2;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            .container {
+                max-width: 100%;
+                padding: 0;
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        @media print {
+            .header {
+                border-radius: 0;
+                padding: 20px;
+            }
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header .army-info {
+            font-size: 18px;
+            opacity: 0.95;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #667eea;
+            margin: 30px 0 20px 0;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        @media print {
+            .section-title {
+                margin-top: 20px;
+            }
+        }
+
+        /* Unit cards */
+        .unit-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        @media print {
+            .unit-card {
+                box-shadow: none;
+                border: 2px solid #ddd;
+                border-radius: 4px;
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            /* Page break control for intelligent grouping */
+            .unit-card.page-break-after {
+                page-break-after: always;
+            }
+
+            .unit-card.page-break-before {
+                page-break-before: always;
+            }
+        }
+
+        .unit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .unit-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .unit-points {
+            font-size: 18px;
+            color: #7f8c8d;
+        }
+
+        .warlord-badge {
+            display: inline-block;
+            background: #f39c12;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .model-section {
+            margin: 15px 0;
+        }
+
+        .model-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 10px;
+            background: #ecf0f1;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 13px;
+        }
+
+        @media print {
+            table {
+                font-size: 11px;
+            }
+        }
+
+        th {
+            background: #34495e;
+            color: white;
+            padding: 8px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .weapon-section {
+            margin: 15px 0;
+        }
+
+        .weapon-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #2c3e50;
+            margin: 10px 0 8px 0;
+        }
+
+        .keywords-section {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .passive-abilities-section {
+            margin: 15px 0;
+            padding: 10px;
+            background: #fff4e6;
+            border-left: 4px solid #ff9800;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .enhancements-section {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .abilities-section {
+            margin: 15px 0;
+        }
+
+        .phase-group {
+            margin: 10px 0;
+        }
+
+        .phase-title {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        .ability {
+            margin: 6px 0 6px 15px;
+            line-height: 1.5;
+        }
+
+        .ability-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .ability-description {
+            color: #555;
+            margin-left: 5px;
+        }
+
+        .compact-info {
+            margin: 10px 0;
+            padding: 8px;
+            background: #f8f9fa;
+            border-left: 3px solid #667eea;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .ability-compact {
+            margin: 5px 0;
+            line-height: 1.4;
+            font-size: 13px;
+        }
+
+        /* Faction abilities section */
+        .faction-abilities-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        @media print {
+            .faction-abilities-section {
+                page-break-after: always;
+            }
+        }
+
+        .faction-ability {
+            margin: 15px 0;
+            padding: 12px;
+            background: #f8f9fa;
+            border-left: 4px solid #764ba2;
+            border-radius: 4px;
+        }
+
+        .faction-ability-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .phase-tag {
+            font-size: 14px;
+            font-weight: normal;
+            color: #667eea;
+            font-style: italic;
+        }
+
+        .faction-ability-description {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        @media print {
+            .faction-abilities-section {
+                box-shadow: none;
+                border: 2px solid #ddd;
+                border-radius: 4px;
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .faction-ability {
+                font-size: 11px;
+                padding: 8px;
+                margin: 10px 0;
+            }
+
+            .faction-ability-header {
+                font-size: 14px;
+            }
+
+            .phase-tag {
+                font-size: 11px;
+            }
+
+            .faction-ability-description {
+                font-size: 10px;
+                line-height: 1.4;
+            }
+        }
+
+        @media print {
+            @page {
+                margin: 1.5cm;
+            }
+
+            .compact-info {
+                font-size: 11px;
+                padding: 6px;
+                margin: 8px 0;
+            }
+
+            .ability-compact {
+                font-size: 11px;
+                margin: 3px 0;
+            }
+
+            .keywords-section {
+                font-size: 10px;
+                padding: 8px;
+                margin: 10px 0;
+            }
+
+            .passive-abilities-section {
+                font-size: 10px;
+                padding: 8px;
+                margin: 10px 0;
+            }
+
+            .enhancements-section {
+                font-size: 10px;
+                padding: 8px;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="no-print">
+            <button class="print-button" onclick="window.print()">🖨️ Print Cheat Sheet</button>
+        </div>
+
+        <div class="header">
+            <h1>Redneck Bar Fighters</h1>
+            <div class="army-info">Space Marines - Strike Force - 1620 Points</div>
+        </div>
+
+        <div class="faction-abilities-section">
+            <h2 class="section-title">Faction Abilities</h2>
+        <div class="faction-ability">
+            <div class="faction-ability-header">Oath of Moment <span class="phase-tag">(Command Phase)</span></div>
+            <div class="faction-ability-description">If your Army Faction is <strong>Adeptus Astartes</strong>, at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target:<br>■ You can reroll the Hit roll<br>■ If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the **<strong>Black Templars</strong>, **<strong>Blood Angels</strong>, **<strong>Dark Angels</strong>, **<strong>Deathwatch</strong> or **<strong>Space Wolves</strong> keywords, add 1 to the Wound roll as well.</div>
+        </div>
+        </div>
+        <h2 class="section-title">Characters</h2>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Logan Grimnar</span> <em>(Faction: Adeptus Astartes, Space Wolves)</em>
+                    <span class="warlord-badge">⭐ WARLORD</span>
+                </div>
+                <span class="unit-points">110 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>6"</td>
+                    <td>5</td>
+                    <td>2+</td>
+                    <td>8</td>
+                    <td>6+</td>
+                    <td>1</td>
+                </tr>
+            </table>
+            <div class="weapon-section">
+                <table style="width: 100%; border: none;"><tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Ranged Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Storm Bolter</td>
+                                <td>24"</td>
+                                <td>2</td>
+                                <td>3+</td>
+                                <td>4</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>Rapid Fire 2</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Melee Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Tyrnak and Fenrir</td>
+                                <td>Melee</td>
+                                <td>6</td>
+                                <td>2</td>
+                                <td>5</td>
+                                <td>-1</td>
+                                <td>1</td>
+                                <td>Extra Attacks</td>
+                            </tr>
+                            <tr>
+                                <td>➤ Axe Morkai - Sweep</td>
+                                <td>Melee</td>
+                                <td>10</td>
+                                <td>2+</td>
+                                <td>6</td>
+                                <td>-2</td>
+                                <td>1</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>➤ Axe Morkai - Strike</td>
+                                <td>Melee</td>
+                                <td>6</td>
+                                <td>2+</td>
+                                <td>8</td>
+                                <td>-2</td>
+                                <td>3</td>
+                                <td>-</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr></table>
+            </div>
+            <div class="passive-abilities-section"><strong>Passive Abilities:</strong> Leader | Invulnerable Save 4+ | Deep Strike | Extra Attacks</div>
+            <div class="keywords-section"><strong>Keywords:</strong> Infantry | Character | Epic Hero | Imperium | Terminator | Chapter Master | Logan Grimnar | Extra Attacks Weapon</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Any Phase:</strong> <em>Embarking within Transports</em> - This model can embark within friendly Adeptus Astartes Transport models that can transport Terminator models. When doing, it takes up the space of 4 Infantry models
+                </div>
+                <div class="ability-compact">
+                    <strong>Command Phase:</strong> <em>Guile of the Wolf (Aura)</em> - Each time your opponent targets a unit from their army with a Stratagem, if that unit is within 12" of this model, increase the cost of that usage of that Stratagem by 1CP P (this is not cumulative with any other rules that increase the CP cost of that Stratagem)
+                </div>
+                <div class="ability-compact">
+                    <strong>Movement Phase:</strong> <em>High King of Fenris</em> - Once per battle round, in your Movement phase, you can select one friendly Space Wolves unit that is in Reserves. If you do, until the end of the phase, for the purposes of setting up that unit on the battlefield, treat the current battle round number as being one higher than it actually is.
+                </div>
+            </div>
+        </div>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Arjac Rockfist</span> <em>(Faction: Adeptus Astartes, Space Wolves)</em>
+                    
+                </div>
+                <span class="unit-points">105 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>6"</td>
+                    <td>5</td>
+                    <td>2+</td>
+                    <td>6</td>
+                    <td>6+</td>
+                    <td>1</td>
+                </tr>
+            </table>
+            <div class="weapon-section">
+                <table style="width: 100%; border: none;"><tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Ranged Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Foehammer</td>
+                                <td>6"</td>
+                                <td>1</td>
+                                <td>2+</td>
+                                <td>8</td>
+                                <td>-2</td>
+                                <td>3</td>
+                                <td>Anti-Monster 3+, Anti-Vehicle 3+, Assault</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Melee Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Foehammer</td>
+                                <td>Melee</td>
+                                <td>5</td>
+                                <td>2+</td>
+                                <td>8</td>
+                                <td>-2</td>
+                                <td>3</td>
+                                <td>Anti-Monster 3+, Anti-Vehicle 3+, Precision</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr></table>
+            </div>
+            <div class="passive-abilities-section"><strong>Passive Abilities:</strong> Leader | Invulnerable Save 4+ | Deep Strike</div>
+            <div class="keywords-section"><strong>Keywords:</strong> Infantry | Character | Epic Hero | Imperium | Terminator | Arjac Rockfist</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Movement Phase:</strong> <em>Anvil of Endurance</em> - While this model is leading a unit, each time a model in that unit is destroyed by a melee attack, if that model has not fought this phase, roll one D6, on a 4+, do not remove the destroyed model from play. The destroyed model can fight after the attacking unit has finished making its attacks, and then is removed from play
+                </div>
+                <div class="ability-compact">
+                    <strong>Fight Phase:</strong> <em>Champion of the Kingsguard</em> - Each time this model makes a melee attack that targets a CHARACTER unit, you can re-roll the Hit roll and you can re-roll the Wound roll.
+                </div>
+            </div>
+        </div>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Lieutenant</span> <em>(Faction: Adeptus Astartes)</em>
+                    
+                </div>
+                <span class="unit-points">65 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>6"</td>
+                    <td>4</td>
+                    <td>3+</td>
+                    <td>4</td>
+                    <td>6+</td>
+                    <td>1</td>
+                </tr>
+            </table>
+            <div class="weapon-section">
+                <table style="width: 100%; border: none;"><tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Ranged Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Bolt pistol</td>
+                                <td>12"</td>
+                                <td>1</td>
+                                <td>2+</td>
+                                <td>4</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>Pistol</td>
+                            </tr>
+                            <tr>
+                                <td>Heavy Bolt Pistol</td>
+                                <td>18"</td>
+                                <td>1</td>
+                                <td>2+</td>
+                                <td>4</td>
+                                <td>-1</td>
+                                <td>1</td>
+                                <td>Pistol</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Melee Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Master-crafted Power Weapon</td>
+                                <td>Melee</td>
+                                <td>5</td>
+                                <td>2+</td>
+                                <td>5</td>
+                                <td>-2</td>
+                                <td>2</td>
+                                <td>-</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr></table>
+            </div>
+            <div class="passive-abilities-section"><strong>Passive Abilities:</strong> Leader</div>
+            <div class="keywords-section"><strong>Keywords:</strong> Character | Infantry | Grenades | Imperium | Tacticus | Lieutenant | Ranged Weapon</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Any Phase:</strong> <em>Storm Shield</em> - The bearer has a 4+ invulnerable save
+                </div>
+                <div class="ability-compact">
+                    <strong>Any Phase:</strong> <em>Tactical Precision</em> - While this model is leading a unit, weapons equipped by models in that unit have the [LETHAL HITS] ability.
+                </div>
+                <div class="ability-compact">
+                    <strong>Movement Phase:</strong> <em>Target Priority</em> - This model’s unit is eligible to shoot and declare a charge in a turn in which it Fell Back
+                </div>
+            </div>
+        </div>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Techmarine</span> <em>(Faction: Adeptus Astartes)</em>
+                    
+                </div>
+                <span class="unit-points">65 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>6"</td>
+                    <td>4</td>
+                    <td>2+</td>
+                    <td>4</td>
+                    <td>6+</td>
+                    <td>1</td>
+                </tr>
+            </table>
+            <div class="weapon-section">
+                <table style="width: 100%; border: none;"><tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Ranged Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Forge Bolter</td>
+                                <td>24"</td>
+                                <td>3</td>
+                                <td>2+</td>
+                                <td>5</td>
+                                <td>-1</td>
+                                <td>2</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Grav-pistol</td>
+                                <td>12"</td>
+                                <td>1</td>
+                                <td>3+</td>
+                                <td>4</td>
+                                <td>-1</td>
+                                <td>2</td>
+                                <td>Anti-vehicle 2+, Pistol</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Melee Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Omnissian Power Axe</td>
+                                <td>Melee</td>
+                                <td>4</td>
+                                <td>3+</td>
+                                <td>6</td>
+                                <td>-2</td>
+                                <td>2</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Servo-arm</td>
+                                <td>Melee</td>
+                                <td>1</td>
+                                <td>3+</td>
+                                <td>8</td>
+                                <td>-2</td>
+                                <td>3</td>
+                                <td>Extra Attacks</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr></table>
+            </div>
+            <div class="passive-abilities-section"><strong>Passive Abilities:</strong> Leader</div>
+            <div class="keywords-section"><strong>Keywords:</strong> Character | Infantry | Grenades | Imperium | Tacticus | Techmarine | Ranged Weapon</div>
+            <div class="enhancements-section"><strong>Enhancements:</strong> Feral Rage</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Any Phase:</strong> <em>Techmarine</em> - While this model is within 3" of one or more friendly Adeptus Astartes Vehicle units, this model has the Lone Operative ability
+                </div>
+                <div class="ability-compact">
+                    <strong>Any Phase:</strong> <em>Vengeance of the Omnissiah</em> - If a friendly Adeptus Astartes Vehicle model is destroyed within 12" of this model, until the end of the battle, this model’s Omnissian power axe has an<br>Attacks characteristic of 7.
+                </div>
+                <div class="ability-compact">
+                    <strong>Command Phase:</strong> <em>Blessing of the Omnissiah</em> - In your Command phase, you can select one friendly Adeptus Astartes Vehicle model within 3" of this model. That model regains up to D3 lost wounds and, until the start of your next Command phase, each time that Vehicle model makes an attack, add 1 to the Hit roll. Each model can only be selected for this ability once per turn.
+                </div>
+            </div>
+        </div>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Wolf Guard Battle Leader</span> <em>(Faction: Adeptus Astartes, Space Wolves)</em>
+                    
+                </div>
+                <span class="unit-points">70 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>7"</td>
+                    <td>4</td>
+                    <td>3+</td>
+                    <td>5</td>
+                    <td>6+</td>
+                    <td>1</td>
+                </tr>
+            </table>
+            <div class="weapon-section">
+                <table style="width: 100%; border: none;"><tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Melee Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Master-crafted Power Weapon</td>
+                                <td>Melee</td>
+                                <td>7</td>
+                                <td>2+</td>
+                                <td>5</td>
+                                <td>-2</td>
+                                <td>2</td>
+                                <td>-</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr></table>
+            </div>
+            <div class="passive-abilities-section"><strong>Passive Abilities:</strong> Leader | Invulnerable Save 4+</div>
+            <div class="keywords-section"><strong>Keywords:</strong> Melee Weapon | Ranged Weapon | Ranged Weapon | Infantry | Character | Imperium | Tacticus | Wolf Guard | Battle Leader</div>
+            <div class="enhancements-section"><strong>Enhancements:</strong> Wolf Master</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Any Phase:</strong> <em>Tempered Ferocity</em> - While this model is leading a unit, weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability and, each time a model in that unit makes an attack that targets an enemy unit within 6", re-roll a Hit roll of 1
+                </div>
+                <div class="ability-compact">
+                    <strong>Any Phase:</strong> <em>Storm Shield</em> - The bearer has a Wounds characteristic of 6
+                </div>
+                <div class="ability-compact">
+                    <strong>Movement Phase:</strong> <em>Heroic Last Stand</em> - If this model is destroyed by a melee attack, if it has not fought this phase, roll one D6: on a 2+, do not remove it from play. The destroyed model can fight after the attacking unit has finished making its attacks, and then it is removed from play.
+                </div>
+            </div>
+        </div>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Wolf Priest</span> <em>(Faction: Space Wolves, Adeptus Astartes)</em>
+                    
+                </div>
+                <span class="unit-points">90 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>7"</td>
+                    <td>4</td>
+                    <td>3+</td>
+                    <td>4</td>
+                    <td>6+</td>
+                    <td>1</td>
+                </tr>
+            </table>
+            <div class="weapon-section">
+                <table style="width: 100%; border: none;"><tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Ranged Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Absolvor Bolt Pistol</td>
+                                <td>18"</td>
+                                <td>1</td>
+                                <td>3+</td>
+                                <td>5</td>
+                                <td>-1</td>
+                                <td>2</td>
+                                <td>Pistol</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Melee Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Crozius Arcanum</td>
+                                <td>Melee</td>
+                                <td>5</td>
+                                <td>2+</td>
+                                <td>6</td>
+                                <td>-1</td>
+                                <td>2</td>
+                                <td>-</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr></table>
+            </div>
+            <div class="passive-abilities-section"><strong>Passive Abilities:</strong> Leader | Invulnerable Save 4+</div>
+            <div class="keywords-section"><strong>Keywords:</strong> Infantry | Character | Imperium | Tacticus | Wolf Priest</div>
+            <div class="enhancements-section"><strong>Enhancements:</strong> Swift Hunter</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Command Phase:</strong> <em>Healing Balms</em> - While this model is leading a unit, in your Command phase, you can return 1 model (excluding CHARACTER models) to that unit.
+                </div>
+                <div class="ability-compact">
+                    <strong>Fight Phase:</strong> <em>Litany of Hate</em> - While this model is leading a unit, each time a model in that unit makes a melee attack, add 1 to the Wound roll.
+                </div>
+            </div>
+        </div>
+        <h2 class="section-title">Units</h2>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Blood Claws</span> <em>(Faction: Adeptus Astartes, Space Wolves)</em>
+                    
+                </div>
+                <span class="unit-points">135 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>7"</td>
+                    <td>4</td>
+                    <td>3+</td>
+                    <td>2</td>
+                    <td>6+</td>
+                    <td>2</td>
+                </tr>
+            </table>
+            <table style="width: 100%; border: none;">
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="model-header">Blood Claw Pack Leader (1 model)</div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="model-header">Blood Claw (9 models)</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Ranged Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Bolt pistol</td>
+                            <td>12"</td>
+                            <td>1</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>Pistol</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Ranged Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>Bolt pistol</td>
+                            <td>12"</td>
+                            <td>1</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>Pistol</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Melee Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Power Weapon</td>
+                            <td>Melee</td>
+                            <td>4</td>
+                            <td>3+</td>
+                            <td>5</td>
+                            <td>-2</td>
+                            <td>1</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Melee Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>Astartes Chainsword</td>
+                            <td>Melee</td>
+                            <td>4</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>-1</td>
+                            <td>1</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="keywords-section"><strong>Keywords:</strong> Infantry | Battleline | Grenades | Imperium | Blood Claws | Tacticus</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Movement Phase:</strong> <em>Berserk Charge</em> - This unit is eligible to declare a charge in a turn in which it Advanced
+                </div>
+            </div>
+        </div>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Intercessor Squad</span> <em>(Faction: Adeptus Astartes)</em>
+                    
+                </div>
+                <span class="unit-points">160 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>6"</td>
+                    <td>4</td>
+                    <td>3+</td>
+                    <td>2</td>
+                    <td>6+</td>
+                    <td>2</td>
+                </tr>
+            </table>
+            <table style="width: 100%; border: none;">
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="model-header">Intercessor Sergeant (1 model)</div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="model-header">Intercessor (9 models)</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Ranged Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Hand Flamer</td>
+                            <td>12"</td>
+                            <td>D6</td>
+                            <td>N/A</td>
+                            <td>3</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>Ignores Cover, Pistol, Torrent</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Bolt pistol</td>
+                            <td>12"</td>
+                            <td>1</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>Pistol</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Ranged Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>Bolt Rifle</td>
+                            <td>24"</td>
+                            <td>2</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>-1</td>
+                            <td>1</td>
+                            <td>Assault, Heavy</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>➤ Astartes grenade launcher - krak</td>
+                            <td>24"</td>
+                            <td>1</td>
+                            <td>3+</td>
+                            <td>9</td>
+                            <td>-2</td>
+                            <td>D3</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>➤ Astartes grenade launcher - frag</td>
+                            <td>24"</td>
+                            <td>D3</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>Blast</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>Bolt pistol</td>
+                            <td>12"</td>
+                            <td>1</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>Pistol</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Melee Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Power Weapon</td>
+                            <td>Melee</td>
+                            <td>4</td>
+                            <td>3+</td>
+                            <td>5</td>
+                            <td>-2</td>
+                            <td>1</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Melee Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>Close combat weapon</td>
+                            <td>Melee</td>
+                            <td>3</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="keywords-section"><strong>Keywords:</strong> Infantry | Battleline | Grenades | Imperium | Tacticus | Intercessor Squad</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Command Phase:</strong> <em>Objective Secured</em> - If you control an objective marker at the end of your Command phase and this unit is within range of that objective marker, that objective marker remains under your control, even if you have no models within range of it, until your opponent controls it at the start or end of any turn.
+                </div>
+                <div class="ability-compact">
+                    <strong>Shooting Phase:</strong> <em>Target Elimination</em> - Each time this unit is selected to shoot, it can use this ability. If it does, until the end of the phase, add 2 to the Attacks characteristic of bolt rifles equipped by models in this unit and you can only select one enemy unit as the target of all of this unit's attacks
+                </div>
+            </div>
+        </div>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Rhino</span> <em>(Faction: Adeptus Astartes)</em>
+                    
+                </div>
+                <span class="unit-points">75 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>12"</td>
+                    <td>9</td>
+                    <td>3+</td>
+                    <td>10</td>
+                    <td>6+</td>
+                    <td>2</td>
+                </tr>
+            </table>
+            <div class="weapon-section">
+                <table style="width: 100%; border: none;"><tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Ranged Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Hunter-killer missile</td>
+                                <td>48"</td>
+                                <td>1</td>
+                                <td>2+</td>
+                                <td>14</td>
+                                <td>-3</td>
+                                <td>D6</td>
+                                <td>One Shot</td>
+                            </tr>
+                            <tr>
+                                <td>Storm Bolter</td>
+                                <td>24"</td>
+                                <td>2</td>
+                                <td>3+</td>
+                                <td>4</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>Rapid Fire 2</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Melee Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Armoured Tracks</td>
+                                <td>Melee</td>
+                                <td>3</td>
+                                <td>4+</td>
+                                <td>6</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>-</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr></table>
+            </div>
+            <div class="passive-abilities-section"><strong>Passive Abilities:</strong> Firing Deck 2 | Deadly Demise D3</div>
+            <div class="keywords-section"><strong>Keywords:</strong> Imperium | Smoke | Dedicated Transport | Transport | Vehicle | Rhino</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Any Phase:</strong> <em>Transport</em> - This model has a transport capacity of 12 ADEPTUS ASTARTES INFANTRY models. It cannot transport JUMP PACK, WULFEN, PHOBOS, GRAVIS, CENTURION, TERMINATOR or TACTICUS models (excluding TACTICUS CHARACTER models that began the battle attached to a non-TACTICUS unit)
+                </div>
+                <div class="ability-compact">
+                    <strong>Command Phase:</strong> <em>Self Repair</em> - At the end of your Command phase, this model regains 1 lost wound.
+                </div>
+            </div>
+        </div>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Invictor Tactical Warsuit</span> <em>(Faction: Adeptus Astartes)</em>
+                    
+                </div>
+                <span class="unit-points">125 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>8"</td>
+                    <td>8</td>
+                    <td>3+</td>
+                    <td>12</td>
+                    <td>6+</td>
+                    <td>4</td>
+                </tr>
+            </table>
+            <div class="weapon-section">
+                <table style="width: 100%; border: none;"><tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Ranged Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Incendium Cannon</td>
+                                <td>12"</td>
+                                <td>D6+3</td>
+                                <td>N/A</td>
+                                <td>6</td>
+                                <td>-1</td>
+                                <td>1</td>
+                                <td>Ignores Cover, Torrent</td>
+                            </tr>
+                            <tr>
+                                <td>Fragstorm grenade launcher</td>
+                                <td>18"</td>
+                                <td>D6</td>
+                                <td>3+</td>
+                                <td>4</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>Blast</td>
+                            </tr>
+                            <tr>
+                                <td>Heavy Bolter</td>
+                                <td>36"</td>
+                                <td>3</td>
+                                <td>3+</td>
+                                <td>5</td>
+                                <td>-1</td>
+                                <td>2</td>
+                                <td>Sustained Hits 1</td>
+                            </tr>
+                            <tr>
+                                <td>Twin Ironhail Heavy Stubber</td>
+                                <td>36"</td>
+                                <td>3</td>
+                                <td>3+</td>
+                                <td>4</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>Rapid Fire 3, Twin-linked</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                        <div class="weapon-title">Melee Weapons</div>
+                        <table>
+                            <tr>
+                                <th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                            </tr>
+                            <tr>
+                                <td>Invictor Fist</td>
+                                <td>Melee</td>
+                                <td>5</td>
+                                <td>3+</td>
+                                <td>14</td>
+                                <td>-2</td>
+                                <td>3</td>
+                                <td>-</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr></table>
+            </div>
+            <div class="passive-abilities-section"><strong>Passive Abilities:</strong> Scout 8" | Deadly Demise D3</div>
+            <div class="keywords-section"><strong>Keywords:</strong> Vehicle | Walker | Invictor Tactical Warsuit | Imperium | Phobos</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Any Phase:</strong> <em>Damaged: 1-4 Wounds Remaining</em> - While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll.
+                </div>
+                <div class="ability-compact">
+                    <strong>Shooting Phase:</strong> <em>Combat Support</em> - Once per turn, in your opponent’s Shooting phase, when a friendly Adeptus Astartes Phobos Infantry unit within 6" of this model is selected as the target of an attack, this model can use this ability. If it does, after that enemy model’s unit has finished making its attacks, this model can shoot as if it were your Shooting phase, but when resolving those attacks it can only target that enemy unit (and only if it is an eligible target).
+                </div>
+            </div>
+        </div>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Reiver Squad</span> <em>(Faction: Adeptus Astartes)</em>
+                    
+                </div>
+                <span class="unit-points">80 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>6"</td>
+                    <td>4</td>
+                    <td>3+</td>
+                    <td>2</td>
+                    <td>6+</td>
+                    <td>1</td>
+                </tr>
+            </table>
+            <table style="width: 100%; border: none;">
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="model-header">Reiver Sergeant (1 model)</div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="model-header">Reiver (4 models)</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Ranged Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Special Issue Bolt Pistol</td>
+                            <td>12"</td>
+                            <td>1</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>-1</td>
+                            <td>1</td>
+                            <td>Pistol, Precision</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Bolt Carbine</td>
+                            <td>24"</td>
+                            <td>2</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>Precision</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Ranged Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Special Issue Bolt Pistol</td>
+                            <td>12"</td>
+                            <td>1</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>-1</td>
+                            <td>1</td>
+                            <td>Pistol, Precision</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Bolt Carbine</td>
+                            <td>24"</td>
+                            <td>2</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>Precision</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Melee Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Combat Knife</td>
+                            <td>Melee</td>
+                            <td>4</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>-1</td>
+                            <td>1</td>
+                            <td>Precision</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Close combat weapon</td>
+                            <td>Melee</td>
+                            <td>3</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Melee Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Close combat weapon</td>
+                            <td>Melee</td>
+                            <td>3</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="passive-abilities-section"><strong>Passive Abilities:</strong> Reiver Grav-chute | Scout 6" | Deep Strike</div>
+            <div class="keywords-section"><strong>Keywords:</strong> Infantry | Grenades | Imperium | Smoke | Phobos | Reiver Squad</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Any Phase:</strong> <em>Terror Troops</em> - While an enemy unit (excluding Monsters and Vehicles) is within 3" of one or more units with this ability, subtract 1 from the Objective Control characteristic of models in that enemy unit.
+                </div>
+                <div class="ability-compact">
+                    <strong>Command Phase:</strong> <em>Fearsome Assault</em> - At the start of the Fight phase, each enemy unit within Engagement Range of one or more units with this ability must take a Battle-shock test subtracting 1 from that test
+                </div>
+                <div class="ability-compact">
+                    <strong>Movement Phase:</strong> <em>Grapnel Launchers</em> - Each time the bearer’s unit makes a Normal, Advance, Fall Back or Charge move, ignore any vertical distance when determining the total distance the<br>bearer can be moved during that move
+                </div>
+            </div>
+        </div>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Thunderwolf Cavalry</span> <em>(Faction: Adeptus Astartes, Space Wolves)</em>
+                    
+                </div>
+                <span class="unit-points">115 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>12"</td>
+                    <td>6</td>
+                    <td>3+</td>
+                    <td>4</td>
+                    <td>6+</td>
+                    <td>2</td>
+                </tr>
+            </table>
+            <table style="width: 100%; border: none;">
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="model-header">Thunderwolf Cavalry Pack Leader (1 model)</div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="model-header">Thunderwolf Cavalry (2 models)</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Ranged Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Boltgun</td>
+                            <td>24"</td>
+                            <td>2</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Ranged Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Boltgun</td>
+                            <td>24"</td>
+                            <td>2</td>
+                            <td>3+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Melee Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Wolf Guard Weapon</td>
+                            <td>Melee</td>
+                            <td>4</td>
+                            <td>3+</td>
+                            <td>5</td>
+                            <td>-2</td>
+                            <td>2</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Crushing teeth and claws</td>
+                            <td>Melee</td>
+                            <td>3</td>
+                            <td>4+</td>
+                            <td>5</td>
+                            <td>-1</td>
+                            <td>1</td>
+                            <td>Extra Attacks</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Melee Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Wolf Guard Weapon</td>
+                            <td>Melee</td>
+                            <td>4</td>
+                            <td>3+</td>
+                            <td>5</td>
+                            <td>-2</td>
+                            <td>2</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Crushing teeth and claws</td>
+                            <td>Melee</td>
+                            <td>3</td>
+                            <td>4+</td>
+                            <td>5</td>
+                            <td>-1</td>
+                            <td>1</td>
+                            <td>Extra Attacks</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="keywords-section"><strong>Keywords:</strong> Mounted | Grenades | Imperium | Thunderwolf Cavalry</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Movement Phase:</strong> <em>Thunderous Charge</em> - Each time a model in this unit makes a melee attack with its Wolf Guard weapon, if it made a Charge move this turn, add 1 to the Damage characteristic of that attack
+                </div>
+            </div>
+        </div>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Wolf Guard Terminators</span> <em>(Faction: Adeptus Astartes, Space Wolves)</em>
+                    
+                </div>
+                <span class="unit-points">340 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>6"</td>
+                    <td>5</td>
+                    <td>2+</td>
+                    <td>3</td>
+                    <td>6+</td>
+                    <td>1</td>
+                </tr>
+            </table>
+            <table style="width: 100%; border: none;">
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="model-header">Wolf Guard Terminator Pack Leader (1 model)</div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="model-header">Wolf Guard Terminator (5 models)</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Ranged Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Storm Bolter</td>
+                            <td>24"</td>
+                            <td>2</td>
+                            <td>2+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>Rapid Fire 2</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Ranged Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Assault Cannon</td>
+                            <td>24"</td>
+                            <td>6</td>
+                            <td>2+</td>
+                            <td>6</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>Devastating Wounds</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Melee Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Master-crafted Power Weapon</td>
+                            <td>Melee</td>
+                            <td>4</td>
+                            <td>3+</td>
+                            <td>5</td>
+                            <td>-2</td>
+                            <td>2</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Melee Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Master-crafted Power Weapon</td>
+                            <td>Melee</td>
+                            <td>4</td>
+                            <td>3+</td>
+                            <td>5</td>
+                            <td>-2</td>
+                            <td>2</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Power fist</td>
+                            <td>Melee</td>
+                            <td>3</td>
+                            <td>3+</td>
+                            <td>8</td>
+                            <td>-2</td>
+                            <td>2</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="passive-abilities-section"><strong>Passive Abilities:</strong> Invulnerable Save 4+ | Deep Strike</div>
+            <div class="keywords-section"><strong>Keywords:</strong> Infantry | Imperium | Terminator | Wolf Guard Terminators | Wolf Guard</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Any Phase:</strong> <em>Rugged Resilience</em> - Each time an attack targets this unit, if the Strength characteristic of that attack is greater than the Toughness characteristic of this unit, subtract 1 from the Wound roll.
+                </div>
+            </div>
+        </div>
+        <div class="unit-card">
+            <div class="unit-header">
+                <div>
+                    <span class="unit-name">Wulfen</span> <em>(Faction: Adeptus Astartes, Space Wolves)</em>
+                    
+                </div>
+                <span class="unit-points">85 pts</span>
+            </div>
+            <table>
+                <tr>
+                    <th>M</th><th>T</th><th>SV</th><th>W</th><th>LD</th><th>OC</th>
+                </tr>
+                <tr>
+                    <td>9"</td>
+                    <td>6</td>
+                    <td>4+</td>
+                    <td>2</td>
+                    <td>7+</td>
+                    <td>0</td>
+                </tr>
+            </table>
+                <div class="model-header">Wulfen (5 models)</div>
+            <table style="width: 100%; border: none;"><tr>
+                <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Ranged Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Stormfrag auto-launcher</td>
+                            <td>12"</td>
+                            <td>D3</td>
+                            <td>4+</td>
+                            <td>4</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>Assault, Blast</td>
+                        </tr>
+                    </table>
+                </div>
+                </td>
+                <td style="width: 50%; vertical-align: top; border: none;">
+                <div class="weapon-section">
+                    <div class="weapon-title">Melee Weapons</div>
+                    <table>
+                        <tr>
+                            <th>Count</th><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Wulfen Weapons</td>
+                            <td>Melee</td>
+                            <td>3</td>
+                            <td>3+</td>
+                            <td>5</td>
+                            <td>-2</td>
+                            <td>2</td>
+                            <td>Sustained Hits 1</td>
+                        </tr>
+                    </table>
+                </div>
+                </td>
+            </tr></table>
+            <div class="keywords-section"><strong>Keywords:</strong> Infantry | Imperium | Wulfen</div>
+            <div class="abilities-section">
+                <div class="ability-compact">
+                    <strong>Command Phase:</strong> <em>Savage Frenzy</em> - Each time an enemy unit, (excluding MONSTERS and VEHICLES) within Engagement Range of this unit Falls Back, all that models in that enemy unit must take a Desperate Escape test. When doing so, if that enemy unit is Battle-shocked, subtract 1 from those tests.
+                </div>
+                <div class="ability-compact">
+                    <strong>Command Phase:</strong> <em>Curse of the Wulfen</em> - While this unit is within 6" of one or more friendly SPACE WOLVES CHARACTER models (Excluding WULFEN models) or within 12" of one or more friendly WOLF PRIEST models, if it is not Battle-shocked, add 1 to the Objective Control characteristic of INFANTRY models in it and add 3 to the Objective Control characteristic of VEHICLE models in it.
+                </div>
+                <div class="ability-compact">
+                    <strong>Fight Phase:</strong> <em>Death Totem</em> - Each time the bearer makes a melee attack, re-roll a hit roll of 1.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

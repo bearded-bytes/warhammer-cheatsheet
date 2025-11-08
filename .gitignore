@@ -1,0 +1,25 @@
+# Generated output files
+output/
+*.pyc
+__pycache__/
+.DS_Store
+
+# Generated cheat sheets (except examples)
+*.html
+*.md
+!examples/**/*.html
+!examples/**/*.md
+!README.md
+!catalogues/README.md
+
+# Temporary and debug files
+debug_*
+test_*
+*.tmp
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
