@@ -24,6 +24,7 @@ test_*
 !docs/**/*.md
 !README.md
 !catalogues/README.md
+!DEPLOYMENT.md
 !templates/**/*.html
 
 # Output directory
