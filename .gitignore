@@ -1,10 +1,22 @@
-# Generated output files
-output/
+# Python
 *.pyc
+*.pyo
 __pycache__/
-.DS_Store
 
-# Generated cheat sheets (except examples and docs)
+# Catalogue cache (auto-downloaded from BSData)
+catalogues/*.yaml
+!catalogues/README.md
+
+# Test files and outputs
+*_test.txt
+*_test.html
+*_example.html
+*_example.md
+debug_*
+test_*
+*.tmp
+
+# Generated cheat sheets (keep examples and docs)
 *.html
 *.md
 !examples/**/*.html
@@ -12,11 +24,14 @@ __pycache__/
 !docs/**/*.md
 !README.md
 !catalogues/README.md
+!templates/**/*.html
 
-# Temporary and debug files
-debug_*
-test_*
-*.tmp
+# Output directory
+output/
+
+# Operating System
+.DS_Store
+Thumbs.db
 
 # Editor files
 .vscode/
@@ -24,3 +39,12 @@ test_*
 *.swp
 *.swo
 *~
+
+# Flask
+instance/
+.env
+.flaskenv
+
+# Deployment
+*.log
+*.pid

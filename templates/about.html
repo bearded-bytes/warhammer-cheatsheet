@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Warhammer 40k Cheat Sheet Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>About This Tool</h1>
+            <p><a href="/">← Back to Generator</a></p>
+        </header>
+
+        <div class="main-content about-content">
+            <section>
+                <h2>What is This?</h2>
+                <p>
+                    The Warhammer 40k Cheat Sheet Generator converts BattleScribe army list exports into clean,
+                    printable reference sheets for tabletop gaming. No more flipping through codexes during games!
+                </p>
+            </section>
+
+            <section>
+                <h2>Features</h2>
+                <ul>
+                    <li>✅ Parse BattleScribe text exports</li>
+                    <li>✅ <strong>Automatic faction detection</strong></li>
+                    <li>✅ <strong>Auto-download catalogues from BSData GitHub</strong></li>
+                    <li>✅ Complete unit stats and weapon profiles</li>
+                    <li>✅ Abilities organized by game phase</li>
+                    <li>✅ Faction abilities automatically detected</li>
+                    <li>✅ Print-optimized layout</li>
+                    <li>✅ Support for enhancements and warlords</li>
+                    <li>✅ Multiple output formats (HTML, Markdown)</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Supported Factions</h2>
+                <p><strong>All factions are supported!</strong> The app automatically downloads catalogues from the official BSData repository:</p>
+                <ul>
+                    <li><strong>Chaos:</strong> Death Guard, Thousand Sons, World Eaters, Chaos Space Marines, Chaos Daemons, Chaos Knights, Emperor's Children</li>
+                    <li><strong>Imperium:</strong> Space Marines (all chapters), Astra Militarum, Adepta Sororitas, Adeptus Custodes, Grey Knights, Imperial Knights, Deathwatch, and more</li>
+                    <li><strong>Xenos:</strong> Necrons, Orks, Tyranids, T'au Empire, Aeldari, Drukhari, Leagues of Votann, Genestealer Cults</li>
+                </ul>
+                <p><em>Catalogues are fetched directly from <a href="https://github.com/BSData/wh40k-10e" target="_blank">BSData/wh40k-10e</a> and cached locally.</em></p>
+            </section>
+
+            <section>
+                <h2>How It Works</h2>
+                <ol>
+                    <li>You export your army list from BattleScribe as text</li>
+                    <li><strong>The app automatically detects your faction</strong></li>
+                    <li><strong>If needed, it downloads the latest catalogue from BSData GitHub</strong></li>
+                    <li>The parser extracts unit names, wargear, and enhancements</li>
+                    <li>The generator looks up complete datasheets from faction catalogues</li>
+                    <li>Everything is formatted into a clean, organized cheat sheet</li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Privacy & Data</h2>
+                <p>
+                    Your army lists are processed in real-time and <strong>not stored</strong> on our servers.
+                    All processing happens when you click "Generate" and the data is immediately discarded afterward.
+                </p>
+            </section>
+
+            <section>
+                <h2>Tips for Best Results</h2>
+                <ul>
+                    <li>Use the latest BattleScribe catalogues when building your army</li>
+                    <li>Export as Text, not HTML or other formats</li>
+                    <li>Copy the <strong>entire</strong> army list including headers and faction name</li>
+                    <li>The first few lines should include your faction name (e.g., "Death Guard", "Space Marines")</li>
+                    <li>Use HTML format for printing, Markdown for editing</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Disclaimer</h2>
+                <p>
+                    This is a community tool for personal use. Warhammer 40,000 is a trademark of Games Workshop Ltd.
+                    This project is not affiliated with or endorsed by Games Workshop.
+                </p>
+            </section>
+
+            <section>
+                <h2>Open Source</h2>
+                <p>
+                    This tool is built for the community. If you'd like to contribute additional faction catalogues
+                    or improvements, contributions are welcome!
+                </p>
+            </section>
+        </div>
+
+        <footer>
+            <p><a href="/">← Back to Generator</a></p>
+        </footer>
+    </div>
+</body>
+</html>

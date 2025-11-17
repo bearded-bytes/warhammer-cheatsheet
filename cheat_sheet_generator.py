@@ -13,10 +13,20 @@ from army_list_parser import ArmyListParser
 class CheatSheetGenerator:
     """Generate formatted cheat sheets"""
 
-    def __init__(self, catalogue_yaml: str):
-        """Load the catalogue data"""
-        with open(catalogue_yaml, 'r') as f:
-            self.catalogue = yaml.safe_load(f)
+    def __init__(self, catalogue_source):
+        """
+        Load the catalogue data
+
+        Args:
+            catalogue_source: Either a file path (str) or a dict of catalogue data
+        """
+        if isinstance(catalogue_source, dict):
+            # Already loaded catalogue data
+            self.catalogue = catalogue_source
+        else:
+            # File path - load from disk
+            with open(catalogue_source, 'r') as f:
+                self.catalogue = yaml.safe_load(f)
 
         # Will be populated during generation to track faction abilities
         self.faction_ability_rule_ids = set()

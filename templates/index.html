@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warhammer 40k Cheat Sheet Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚔️ Warhammer 40k Cheat Sheet Generator</h1>
+            <p class="tagline">Transform your BattleScribe army lists into clean, printable cheat sheets</p>
+        </header>
+
+        <div class="main-content">
+            <div class="instructions">
+                <h2>How to Use</h2>
+                <ol>
+                    <li>Export your army list from BattleScribe as <strong>Text</strong> (File → Export → Text)</li>
+                    <li>Paste the entire text into the box below</li>
+                    <li>Click "Generate Cheat Sheet"</li>
+                    <li>The faction is automatically detected and catalogue downloaded if needed!</li>
+                    <li>View, download, or print your cheat sheet!</li>
+                </ol>
+                <p style="margin-top: 15px; color: var(--accent-color);">
+                    ✨ <strong>No need to select your faction!</strong> The app automatically detects it and downloads the latest data from BSData.
+                </p>
+            </div>
+
+            <form id="cheatSheetForm">
+                <div class="form-group">
+                    <label for="army_list">Army List (BattleScribe Text Export)</label>
+                    <textarea
+                        id="army_list"
+                        name="army_list"
+                        rows="15"
+                        placeholder="Paste your BattleScribe army list here...
+
+Example format:
+My Army Name (2000 Points)
+
+Faction Name
+Detachment Name
+Strike Force (2,000 Points)
+
+CHARACTERS
+
+Unit Name (Points)
+  • Wargear items
+  • Enhancements: Name
+
+..."
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="format">Output Format</label>
+                    <select id="format" name="format">
+                        <option value="html">HTML (Recommended for printing)</option>
+                        <option value="markdown">Markdown (For editing)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary">Generate Cheat Sheet</button>
+            </form>
+
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Generating your cheat sheet...</p>
+            </div>
+
+            <div id="error" class="error-message" style="display: none;"></div>
+
+            <div id="result" class="result-container" style="display: none;">
+                <div class="result-header">
+                    <h2>Your Cheat Sheet is Ready!</h2>
+                    <div class="result-info">
+                        <span id="armyName"></span>
+                        <span id="armyPoints"></span>
+                    </div>
+                    <div class="button-group">
+                        <button onclick="downloadCheatSheet()" class="btn-secondary">Download</button>
+                        <button onclick="printCheatSheet()" class="btn-secondary">Print</button>
+                        <button onclick="resetForm()" class="btn-secondary">Generate Another</button>
+                    </div>
+                </div>
+                <div id="cheatSheetPreview" class="preview-container"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Made for the Warhammer 40k community | <a href="/about">About</a></p>
+            <p class="disclaimer">Warhammer 40,000 is a trademark of Games Workshop Ltd. This tool is not affiliated with or endorsed by Games Workshop.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
