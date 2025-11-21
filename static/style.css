@@ -323,6 +323,90 @@ footer a:hover {
     text-decoration: underline;
 }
 
+/* Leader Selection UI */
+.leader-selection-container {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 40px;
+    margin: 30px 0;
+}
+
+.leader-selection-container h2 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.leader-selection-container > p {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.leader-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.leader-card {
+    background: var(--bg-color);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.leader-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+}
+
+.leader-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.leader-card label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.leader-select {
+    width: 100%;
+    padding: 10px;
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.leader-select:hover {
+    border-color: var(--primary-color);
+}
+
+.leader-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.2);
+}
+
+.leader-select option:disabled {
+    color: #666;
+    font-style: italic;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     header h1 {

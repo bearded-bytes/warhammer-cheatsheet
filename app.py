@@ -50,9 +50,78 @@ def generate_cheat_sheet():
                 'error': f'Could not load catalogue for {faction_name}. This faction may not be supported yet.'
             }), 404
 
-        # Generate cheat sheet
+        # Generate cheat sheet (without attachments yet)
         generator = CheatSheetGenerator(catalogue_data)
         cheat_sheet = generator.generate_cheat_sheet(army_list_text)
+
+        # Check if there are leaders that can attach to units
+        leaders_data = cheat_sheet.get('leaders_data', [])
+        available_units = cheat_sheet.get('available_units', [])
+
+        if leaders_data and available_units:
+            # Return data for leader selection UI
+            return jsonify({
+                'success': True,
+                'requires_attachment_selection': True,
+                'army_name': cheat_sheet.get('army_name', 'Unknown Army'),
+                'faction': faction_name,
+                'points': cheat_sheet.get('points', 0),
+                'leaders_data': leaders_data,
+                'available_units': available_units,
+                'format': output_format
+            })
+        else:
+            # No leaders, format and return immediately
+            if output_format == 'markdown':
+                output_content = generator.format_markdown(cheat_sheet)
+            else:
+                output_content = generator.format_html(cheat_sheet)
+
+            return jsonify({
+                'success': True,
+                'content': output_content,
+                'army_name': cheat_sheet.get('army_name', 'Unknown Army'),
+                'faction': faction_name,
+                'points': cheat_sheet.get('points', 0),
+                'format': output_format
+            })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': f'Error generating cheat sheet: {str(e)}'}), 500
+
+
+@app.route('/generate_with_attachments', methods=['POST'])
+def generate_with_attachments():
+    """Generate final cheat sheet with leader attachments"""
+    try:
+        # Get form data
+        data = request.get_json()
+        army_list_text = data.get('army_list', '')
+        output_format = data.get('format', 'html')
+        attachments = data.get('attachments', {})
+
+        # Validate inputs
+        if not army_list_text or not army_list_text.strip():
+            return jsonify({'error': 'Please provide an army list'}), 400
+
+        # Auto-detect faction and get/download catalogue
+        faction_name = catalogue_manager.get_faction_name(army_list_text)
+        if not faction_name:
+            return jsonify({
+                'error': 'Could not detect faction from army list.'
+            }), 400
+
+        catalogue_data = catalogue_manager.get_catalogue_for_army(army_list_text)
+        if not catalogue_data:
+            return jsonify({
+                'error': f'Could not load catalogue for {faction_name}.'
+            }), 404
+
+        # Generate cheat sheet WITH attachments
+        generator = CheatSheetGenerator(catalogue_data)
+        cheat_sheet = generator.generate_cheat_sheet(army_list_text, unit_attachments=attachments)
 
         # Format output
         if output_format == 'markdown':
