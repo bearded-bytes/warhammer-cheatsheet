@@ -121,6 +121,14 @@ class CatalogueParser:
             if desc_elem is not None and desc_elem.text:
                 ability['description'] = desc_elem.text.strip()
 
+        # Check if this is a Leader ability with attachable units
+        description = ability.get('description', '')
+        if ability['name'] == 'Leader' and 'can be attached to the following units:' in description:
+            # Extract the list of attachable units
+            attachable_units = self._extract_attachable_units(description)
+            if attachable_units:
+                ability['attachable_units'] = attachable_units
+
         # Try to categorize by phase
         ability['phase'] = self.categorize_ability_phase(
             ability['name'],
@@ -128,6 +136,28 @@ class CatalogueParser:
         )
 
         return ability
+
+    def _extract_attachable_units(self, description: str) -> List[str]:
+        """
+        Extract list of units that a Leader can attach to from the description.
+
+        Example description format:
+        "This model can be attached to the following units:\n\n■ Blood Claws\n■ Grey Hunters\n■ Wolf Guard"
+        """
+        attachable_units = []
+
+        # Find all lines that start with ■ (or similar bullet markers)
+        lines = description.split('\n')
+        for line in lines:
+            line = line.strip()
+            # Check for bullet markers (■, -, •, *)
+            if line.startswith('■') or line.startswith('•') or (line.startswith('-') and len(line) > 2):
+                # Remove the bullet marker and extract the unit name
+                unit_name = line.lstrip('■•-* ').strip()
+                if unit_name:
+                    attachable_units.append(unit_name)
+
+        return attachable_units
 
     def categorize_ability_phase(self, name: str, description: str) -> str:
         """Categorize ability by game phase"""
