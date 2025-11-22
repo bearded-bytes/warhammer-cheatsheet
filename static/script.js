@@ -23,8 +23,13 @@ document.getElementById('cheatSheetForm').addEventListener('submit', async funct
         document.getElementById('loading').style.display = 'none';
 
         if (response.ok && data.success) {
-            // Show result
-            displayResult(data);
+            // Check if we need to show leader selection UI
+            if (data.requires_attachment_selection) {
+                showLeaderSelection(data, formData);
+            } else {
+                // Show result directly
+                displayResult(data);
+            }
         } else {
             // Show error
             showError(data.error || 'An error occurred while generating the cheat sheet');
@@ -127,6 +132,167 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// Leader selection functionality
+function showLeaderSelection(data, originalFormData) {
+    // Hide the form
+    document.getElementById('cheatSheetForm').style.display = 'none';
+
+    // Create leader selection UI
+    const selectionDiv = document.getElementById('leaderSelection') || createLeaderSelectionDiv();
+    selectionDiv.style.display = 'block';
+
+    // Build unit counts (for handling duplicates)
+    const unitCounts = {};
+    data.available_units.forEach(unit => {
+        unitCounts[unit.name] = (unitCounts[unit.name] || 0) + 1;
+    });
+
+    // Build leader selection HTML
+    let html = `
+        <h2>Configure Leader Attachments</h2>
+        <p>Select which units each leader should attach to:</p>
+        <div class="leader-cards">
+    `;
+
+    data.leaders_data.forEach((leader, leaderIdx) => {
+        html += `
+            <div class="leader-card">
+                <h3>${escapeHtml(leader.name)}</h3>
+                <label>Attach to:</label>
+                <select id="leader_${leaderIdx}" class="leader-select" data-leader-name="${escapeHtml(leader.name)}">
+                    <option value="">-- None (unattached) --</option>
+        `;
+
+        // Add options for attachable units
+        leader.attachable_units.forEach(attachable => {
+            // Find matching units in the army
+            const matchingUnits = data.available_units.filter(u => u.name === attachable);
+            matchingUnits.forEach((unit, idx) => {
+                const suffix = matchingUnits.length > 1 ? ` #${idx + 1}` : '';
+                const value = matchingUnits.length > 1 ? `${unit.name} #${idx + 1}` : unit.name;
+                html += `<option value="${escapeHtml(value)}">${escapeHtml(unit.name)}${suffix}</option>`;
+            });
+        });
+
+        html += `
+                </select>
+            </div>
+        `;
+    });
+
+    html += `
+        </div>
+        <div class="button-group" style="margin-top: 20px;">
+            <button onclick="submitAttachments()" class="btn-primary">Generate Final Cheat Sheet</button>
+            <button onclick="cancelLeaderSelection()" class="btn-secondary">Cancel</button>
+        </div>
+    `;
+
+    selectionDiv.innerHTML = html;
+
+    // Store data for later use
+    window.leaderSelectionData = {
+        originalData: data,
+        originalFormData: originalFormData
+    };
+
+    // Add change listeners to track claimed units
+    document.querySelectorAll('.leader-select').forEach(select => {
+        select.addEventListener('change', updateAvailableUnits);
+    });
+}
+
+function createLeaderSelectionDiv() {
+    const div = document.createElement('div');
+    div.id = 'leaderSelection';
+    div.className = 'leader-selection-container';
+    div.style.display = 'none';
+    document.querySelector('.main-content').appendChild(div);
+    return div;
+}
+
+function updateAvailableUnits() {
+    // Track which units are currently claimed
+    const claimed = new Set();
+    document.querySelectorAll('.leader-select').forEach(select => {
+        if (select.value) {
+            claimed.add(select.value);
+        }
+    });
+
+    // Update all selects to disable claimed options
+    document.querySelectorAll('.leader-select').forEach(select => {
+        const currentValue = select.value;
+        Array.from(select.options).forEach(option => {
+            if (option.value && option.value !== currentValue && claimed.has(option.value)) {
+                option.disabled = true;
+                option.style.color = '#999';
+            } else {
+                option.disabled = false;
+                option.style.color = '';
+            }
+        });
+    });
+}
+
+async function submitAttachments() {
+    const data = window.leaderSelectionData;
+    if (!data) return;
+
+    // Collect attachment selections
+    const attachments = {};
+    document.querySelectorAll('.leader-select').forEach(select => {
+        const leaderName = select.getAttribute('data-leader-name');
+        const unitName = select.value;
+        if (unitName) {
+            attachments[leaderName] = unitName;
+        }
+    });
+
+    // Show loading
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('leaderSelection').style.display = 'none';
+
+    try {
+        // Get original army list text
+        const armyListText = data.originalFormData.get('army_list');
+        const format = data.originalFormData.get('format');
+
+        // Submit to new endpoint with attachments
+        const response = await fetch('/generate_with_attachments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                army_list: armyListText,
+                format: format,
+                attachments: attachments
+            })
+        });
+
+        const result = await response.json();
+
+        // Hide loading
+        document.getElementById('loading').style.display = 'none';
+
+        if (response.ok && result.success) {
+            displayResult(result);
+        } else {
+            showError(result.error || 'Error generating cheat sheet with attachments');
+        }
+    } catch (error) {
+        document.getElementById('loading').style.display = 'none';
+        showError('Network error: ' + error.message);
+    }
+}
+
+function cancelLeaderSelection() {
+    document.getElementById('leaderSelection').style.display = 'none';
+    document.getElementById('cheatSheetForm').style.display = 'block';
+    window.leaderSelectionData = null;
 }
 
 // Add example army list button functionality

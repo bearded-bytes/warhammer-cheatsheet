@@ -89,8 +89,15 @@ class CheatSheetGenerator:
 
         return None
 
-    def generate_cheat_sheet(self, army_list_text: str) -> Dict[str, Any]:
-        """Generate a complete cheat sheet"""
+    def generate_cheat_sheet(self, army_list_text: str, unit_attachments: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
+        """
+        Generate a complete cheat sheet
+
+        Args:
+            army_list_text: BattleScribe army list as text
+            unit_attachments: Optional dict mapping leader names to unit names they're attached to
+                              Example: {"Wolf Guard Battle Leader": "Blood Claws #1"}
+        """
         # Parse the army list
         parser = ArmyListParser(army_list_text)
         army = parser.parse()
@@ -101,7 +108,8 @@ class CheatSheetGenerator:
             'faction': army['faction'],
             'detachment': army['detachment'],
             'characters': [],
-            'units': []
+            'units': [],
+            'unit_attachments': unit_attachments or {}
         }
 
         # Process characters (put warlord first)
@@ -133,6 +141,25 @@ class CheatSheetGenerator:
 
         # Extract faction abilities (shared rules that appear on many units)
         cheat_sheet['faction_abilities'] = self._extract_faction_abilities(cheat_sheet)
+
+        # Collect leader data for frontend (for leader selection UI)
+        leaders_data = []
+        for char in cheat_sheet['characters']:
+            if 'leader_data' in char:
+                leaders_data.append({
+                    'name': char['name'],
+                    'attachable_units': char['leader_data']['attachable_units']
+                })
+        cheat_sheet['leaders_data'] = leaders_data
+
+        # Collect available units (non-character units that could be led)
+        available_units = []
+        for unit in cheat_sheet['units']:
+            available_units.append({
+                'name': unit['name'],
+                'unit_type': unit.get('unit_type', 'Other')
+            })
+        cheat_sheet['available_units'] = available_units
 
         return cheat_sheet
 
@@ -352,6 +379,15 @@ class CheatSheetGenerator:
                 enriched['abilities_by_phase'] = abilities_by_phase
                 enriched['passive_abilities'] = passive_abilities
 
+                # Check for Leader ability and extract attachable units
+                for ability in catalogue_unit['abilities']:
+                    if ability.get('name') == 'Leader' and 'attachable_units' in ability:
+                        enriched['leader_data'] = {
+                            'can_lead': True,
+                            'attachable_units': ability['attachable_units']
+                        }
+                        break
+
             # Add weapons
             if 'weapons' in catalogue_unit:
                 is_character = self._is_character(catalogue_unit)
@@ -439,22 +475,42 @@ class CheatSheetGenerator:
         return enriched
 
     def _normalize_weapon_name(self, name: str) -> str:
-        """Normalize weapon name for matching (lowercase, normalize special characters)"""
+        """Normalize weapon name for matching (lowercase, normalize special characters and spacing)"""
         # Convert to lowercase
         normalized = name.lower()
         # Normalize various dash/hyphen characters to regular hyphen
         normalized = normalized.replace('‑', '-').replace('–', '-').replace('—', '-')
         # Normalize quotes
         normalized = normalized.replace(''', "'").replace(''', "'").replace('"', '"').replace('"', '"')
+        # Normalize spacing - collapse multiple spaces and remove spaces around hyphens
+        normalized = ' '.join(normalized.split())
+        # Also create a version without spaces for compound words (e.g., "great axe" -> "greataxe")
+        # This helps match BattleScribe inconsistencies
         return normalized
 
     def _weapon_matches(self, weapon_name: str, selected_names: List[str]) -> bool:
         """Check if a weapon matches any selected weapon"""
         weapon_normalized = self._normalize_weapon_name(weapon_name)
+        weapon_no_spaces = weapon_normalized.replace(' ', '')  # Version without spaces for flexible matching
+
         for selected in selected_names:
             selected_normalized = self._normalize_weapon_name(selected)
-            if weapon_normalized == selected_normalized or weapon_normalized in selected_normalized or selected_normalized in weapon_normalized:
+            selected_no_spaces = selected_normalized.replace(' ', '')
+
+            # Try multiple matching strategies
+            # 1. Exact match (normalized)
+            if weapon_normalized == selected_normalized:
                 return True
+            # 2. Match without spaces (handles "great axe" vs "greataxe")
+            if weapon_no_spaces == selected_no_spaces:
+                return True
+            # 3. Substring match (for partial matches)
+            if weapon_normalized in selected_normalized or selected_normalized in weapon_normalized:
+                return True
+            # 4. Substring match without spaces
+            if weapon_no_spaces in selected_no_spaces or selected_no_spaces in weapon_no_spaces:
+                return True
+
         return False
 
     def _get_weapon_counts(self, unit: Dict[str, Any]) -> Dict[str, int]:
@@ -565,6 +621,102 @@ class CheatSheetGenerator:
 
         return '\n'.join(html)
 
+    def _group_units_by_attachments(self, cheat_sheet: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Group characters and units based on leader attachments
+
+        Returns a dict with:
+        - unattached_characters: Characters without attachments
+        - attached_groups: List of {leader, unit} pairs
+        - unled_units: Units without leaders
+        - transports: Dedicated transports/vehicles
+        """
+        attachments = cheat_sheet.get('unit_attachments', {})
+        characters = cheat_sheet.get('characters', [])
+        units = cheat_sheet.get('units', [])
+
+        # Build reverse lookup: unit_name -> count (for handling duplicates)
+        unit_counts = {}
+        for unit in units:
+            name = unit['name']
+            unit_counts[name] = unit_counts.get(name, 0) + 1
+
+        # Track which units have been claimed
+        claimed_units = set()
+
+        # Categorize characters
+        unattached_characters = []
+        attached_groups = []
+
+        for char in characters:
+            char_name = char['name']
+
+            # Check if this character is attached to a unit
+            if char_name in attachments:
+                attached_unit_name = attachments[char_name]
+
+                # Find the corresponding unit (handle duplicates with #N suffix)
+                target_unit = None
+                if '#' in attached_unit_name:
+                    # Format: "Blood Claws #1"
+                    base_name, instance = attached_unit_name.rsplit('#', 1)
+                    base_name = base_name.strip()
+                    try:
+                        instance_num = int(instance.strip())
+                        # Find the Nth instance of this unit
+                        count = 0
+                        for unit in units:
+                            if unit['name'] == base_name and unit not in [g['unit'] for g in attached_groups]:
+                                count += 1
+                                if count == instance_num:
+                                    target_unit = unit
+                                    break
+                    except ValueError:
+                        pass
+                else:
+                    # No instance number, find first unclaimed unit with this name
+                    for unit in units:
+                        if unit['name'] == attached_unit_name and unit not in [g['unit'] for g in attached_groups]:
+                            target_unit = unit
+                            break
+
+                if target_unit:
+                    attached_groups.append({
+                        'leader': char,
+                        'unit': target_unit
+                    })
+                    claimed_units.add(id(target_unit))
+                else:
+                    # Unit not found, treat as unattached
+                    unattached_characters.append(char)
+            else:
+                # No attachment specified
+                unattached_characters.append(char)
+
+        # Categorize remaining units
+        unled_units = []
+        transports = []
+
+        for unit in units:
+            if id(unit) not in claimed_units:
+                # Check if it's a transport/vehicle
+                categories = unit.get('categories', [])
+                if any(cat in ['Transport', 'Vehicle', 'Dedicated Transport'] for cat in categories):
+                    transports.append(unit)
+                else:
+                    unled_units.append(unit)
+
+        # Sort attached_groups to prioritize warlord-led groups first
+        # Warlord-led groups (warlord=True) should appear before non-warlord groups
+        attached_groups.sort(key=lambda g: not g['leader'].get('warlord', False))
+
+        return {
+            'unattached_characters': unattached_characters,
+            'attached_groups': attached_groups,
+            'unled_units': unled_units,
+            'transports': transports
+        }
+
     def format_markdown(self, cheat_sheet: Dict[str, Any]) -> str:
         """Format cheat sheet as Markdown for easy reading"""
         lines = []
@@ -582,17 +734,55 @@ class CheatSheetGenerator:
                 self._format_faction_ability_markdown(ability, lines)
             lines.append("")
 
-        lines.append("## Characters")
-        lines.append("")
+        # Check if we have attachments to group by
+        if cheat_sheet.get('unit_attachments'):
+            grouped = self._group_units_by_attachments(cheat_sheet)
 
-        for char in cheat_sheet.get('characters', []):
-            self._format_unit_markdown(char, lines)
+            # Led units first (leader + unit pairs, warlord-led first)
+            if grouped['attached_groups']:
+                lines.append("## Led Units")
+                lines.append("")
+                for group in grouped['attached_groups']:
+                    lines.append(f"### {group['leader']['name']} leading {group['unit']['name']}")
+                    lines.append("")
+                    self._format_unit_markdown(group['leader'], lines)
+                    lines.append("---")
+                    lines.append("")
+                    self._format_unit_markdown(group['unit'], lines)
 
-        lines.append("## Units")
-        lines.append("")
+            # Unattached characters second
+            if grouped['unattached_characters']:
+                lines.append("## Characters")
+                lines.append("")
+                for char in grouped['unattached_characters']:
+                    self._format_unit_markdown(char, lines)
 
-        for unit in cheat_sheet.get('units', []):
-            self._format_unit_markdown(unit, lines)
+            # Unled units third
+            if grouped['unled_units']:
+                lines.append("## Unled Units")
+                lines.append("")
+                for unit in grouped['unled_units']:
+                    self._format_unit_markdown(unit, lines)
+
+            # Transports last
+            if grouped['transports']:
+                lines.append("## Transports")
+                lines.append("")
+                for unit in grouped['transports']:
+                    self._format_unit_markdown(unit, lines)
+        else:
+            # Original behavior (no attachments)
+            lines.append("## Characters")
+            lines.append("")
+
+            for char in cheat_sheet.get('characters', []):
+                self._format_unit_markdown(char, lines)
+
+            lines.append("## Units")
+            lines.append("")
+
+            for unit in cheat_sheet.get('units', []):
+                self._format_unit_markdown(unit, lines)
 
         return '\n'.join(lines)
 
@@ -809,6 +999,46 @@ class CheatSheetGenerator:
 
             .unit-card.page-break-before {
                 page-break-before: always;
+            }
+        }
+
+        /* Leader group styling */
+        .leader-group {
+            border: 3px solid #3498db;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .leader-group-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            background: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: -15px -15px 15px -15px;
+        }
+
+        .attached-unit {
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 4px solid #3498db;
+        }
+
+        @media print {
+            .leader-group {
+                border: 2px solid #333;
+                background: #f0f0f0;
+            }
+
+            .leader-group-header {
+                background: #555;
+                border-bottom: 2px solid #333;
             }
         }
 
@@ -1105,21 +1335,59 @@ class CheatSheetGenerator:
                 html_parts.append(self._format_faction_ability_html(ability))
             html_parts.append('        </div>')
 
-        # Characters section with intelligent page grouping
-        characters = cheat_sheet.get('characters', [])
-        html_parts.append('        <h2 class="section-title">Characters</h2>')
-        if characters:
-            char_page_breaks = self._assign_page_groups(characters)
-            for i, char in enumerate(characters):
-                html_parts.append(self._format_unit_html(char, is_character=True, page_break_class=char_page_breaks[i]))
+        # Check if we have attachments to group by
+        if cheat_sheet.get('unit_attachments'):
+            grouped = self._group_units_by_attachments(cheat_sheet)
 
-        # Units section with intelligent page grouping
-        units = cheat_sheet.get('units', [])
-        html_parts.append('        <h2 class="section-title">Units</h2>')
-        if units:
-            unit_page_breaks = self._assign_page_groups(units)
-            for i, unit in enumerate(units):
-                html_parts.append(self._format_unit_html(unit, is_character=False, page_break_class=unit_page_breaks[i]))
+            # Led units first (leader + unit pairs, warlord-led first)
+            if grouped['attached_groups']:
+                html_parts.append('        <h2 class="section-title">Led Units</h2>')
+                for group in grouped['attached_groups']:
+                    html_parts.append('        <div class="leader-group">')
+                    html_parts.append(f'            <h3 class="leader-group-header">{group["leader"]["name"]} leading {group["unit"]["name"]}</h3>')
+                    html_parts.append(self._format_unit_html(group['leader'], is_character=True, page_break_class=''))
+                    html_parts.append('            <div class="attached-unit">')
+                    html_parts.append(self._format_unit_html(group['unit'], is_character=False, page_break_class=''))
+                    html_parts.append('            </div>')
+                    html_parts.append('        </div>')
+
+            # Unattached characters second
+            if grouped['unattached_characters']:
+                html_parts.append('        <h2 class="section-title">Characters</h2>')
+                char_page_breaks = self._assign_page_groups(grouped['unattached_characters'])
+                for i, char in enumerate(grouped['unattached_characters']):
+                    html_parts.append(self._format_unit_html(char, is_character=True, page_break_class=char_page_breaks[i]))
+
+            # Unled units third
+            if grouped['unled_units']:
+                html_parts.append('        <h2 class="section-title">Unled Units</h2>')
+                unit_page_breaks = self._assign_page_groups(grouped['unled_units'])
+                for i, unit in enumerate(grouped['unled_units']):
+                    html_parts.append(self._format_unit_html(unit, is_character=False, page_break_class=unit_page_breaks[i]))
+
+            # Transports last
+            if grouped['transports']:
+                html_parts.append('        <h2 class="section-title">Transports</h2>')
+                transport_page_breaks = self._assign_page_groups(grouped['transports'])
+                for i, unit in enumerate(grouped['transports']):
+                    html_parts.append(self._format_unit_html(unit, is_character=False, page_break_class=transport_page_breaks[i]))
+        else:
+            # Original behavior (no attachments)
+            # Characters section with intelligent page grouping
+            characters = cheat_sheet.get('characters', [])
+            html_parts.append('        <h2 class="section-title">Characters</h2>')
+            if characters:
+                char_page_breaks = self._assign_page_groups(characters)
+                for i, char in enumerate(characters):
+                    html_parts.append(self._format_unit_html(char, is_character=True, page_break_class=char_page_breaks[i]))
+
+            # Units section with intelligent page grouping
+            units = cheat_sheet.get('units', [])
+            html_parts.append('        <h2 class="section-title">Units</h2>')
+            if units:
+                unit_page_breaks = self._assign_page_groups(units)
+                for i, unit in enumerate(units):
+                    html_parts.append(self._format_unit_html(unit, is_character=False, page_break_class=unit_page_breaks[i]))
 
         # Close HTML
         html_parts.append('''    </div>
@@ -1271,21 +1539,9 @@ class CheatSheetGenerator:
             lines.append(f"| {stats.get('M', '-')} | {stats.get('T', '-')} | {stats.get('SV', '-')} | {stats.get('W', '-')} | {stats.get('LD', '-')} | {stats.get('OC', '-')} |")
             lines.append("")
 
-        # Helper function to check if weapon matches
+        # Helper function to check if weapon matches (use class method for consistency)
         def weapon_matches(catalogue_weapon_name: str, model_weapon_names: List[str]) -> bool:
-            cat_normalized = self._normalize_weapon_name(catalogue_weapon_name)
-            for model_name in model_weapon_names:
-                model_normalized = self._normalize_weapon_name(model_name)
-                if cat_normalized == model_normalized:
-                    return True
-                if model_normalized in cat_normalized or cat_normalized in model_normalized:
-                    exact_match_exists = any(
-                        self._normalize_weapon_name(w['name']) == model_normalized
-                        for w in all_weapons.get('ranged', []) + all_weapons.get('melee', [])
-                    )
-                    if not exact_match_exists:
-                        return True
-            return False
+            return self._weapon_matches(catalogue_weapon_name, model_weapon_names)
 
         # Helper function to get weapons for a model
         def get_model_weapons(model):
@@ -1474,21 +1730,9 @@ class CheatSheetGenerator:
         model_weapon_names = [w['name'] for w in model.get('weapons', [])]
         all_weapons = unit.get('weapons', {})
 
-        # Helper function
+        # Helper function (use class method for consistency)
         def weapon_matches(catalogue_weapon_name: str, model_weapon_names: List[str]) -> bool:
-            cat_normalized = self._normalize_weapon_name(catalogue_weapon_name)
-            for model_name in model_weapon_names:
-                model_normalized = self._normalize_weapon_name(model_name)
-                if cat_normalized == model_normalized:
-                    return True
-                if model_normalized in cat_normalized or cat_normalized in model_normalized:
-                    exact_match_exists = any(
-                        self._normalize_weapon_name(w['name']) == model_normalized
-                        for w in all_weapons.get('ranged', []) + all_weapons.get('melee', [])
-                    )
-                    if not exact_match_exists:
-                        return True
-            return False
+            return self._weapon_matches(catalogue_weapon_name, model_weapon_names)
 
         # Ranged weapons
         ranged_for_model = []
@@ -1531,21 +1775,9 @@ class CheatSheetGenerator:
         model_weapon_names = [w['name'] for w in model.get('weapons', [])]
         all_weapons = unit.get('weapons', {})
 
-        # Helper function
+        # Helper function (use class method for consistency)
         def weapon_matches(catalogue_weapon_name: str, model_weapon_names: List[str]) -> bool:
-            cat_normalized = self._normalize_weapon_name(catalogue_weapon_name)
-            for model_name in model_weapon_names:
-                model_normalized = self._normalize_weapon_name(model_name)
-                if cat_normalized == model_normalized:
-                    return True
-                if model_normalized in cat_normalized or cat_normalized in model_normalized:
-                    exact_match_exists = any(
-                        self._normalize_weapon_name(w['name']) == model_normalized
-                        for w in all_weapons.get('ranged', []) + all_weapons.get('melee', [])
-                    )
-                    if not exact_match_exists:
-                        return True
-            return False
+            return self._weapon_matches(catalogue_weapon_name, model_weapon_names)
 
         # Melee weapons
         melee_for_model = []
