@@ -8,6 +8,7 @@ import re
 import yaml
 import requests
 import tempfile
+import shutil
 from pathlib import Path
 from typing import Optional, Dict, List
 from wh40k_parser import CatalogueParser
@@ -57,6 +58,22 @@ FACTION_CATALOGUE_MAP = {
 }
 
 GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/BSData/wh40k-10e/main/'
+
+# Map factions to their primary linked catalogues (for common weapons/units)
+FACTION_LINKED_CATALOGUES = {
+    'Space Wolves': ['Imperium - Space Marines.cat'],
+    'Blood Angels': ['Imperium - Space Marines.cat'],
+    'Dark Angels': ['Imperium - Space Marines.cat'],
+    'Black Templars': ['Imperium - Space Marines.cat'],
+    'Deathwatch': ['Imperium - Space Marines.cat'],
+    'Ultramarines': ['Imperium - Space Marines.cat'],
+    'Imperial Fists': ['Imperium - Space Marines.cat'],
+    'Salamanders': ['Imperium - Space Marines.cat'],
+    'Raven Guard': ['Imperium - Space Marines.cat'],
+    'Iron Hands': ['Imperium - Space Marines.cat'],
+    'White Scars': ['Imperium - Space Marines.cat'],
+    'Grey Knights': ['Imperium - Space Marines.cat'],
+}
 
 
 class CatalogueManager:
@@ -130,7 +147,7 @@ class CatalogueManager:
 
     def download_and_parse_catalogue(self, faction_name: str) -> Optional[Dict]:
         """
-        Download catalogue from GitHub and parse in-memory
+        Download catalogue from GitHub and parse with linked catalogues
         Returns catalogue data dict or None if failed
         """
         cat_filename = self.get_catalogue_filename(faction_name)
@@ -140,36 +157,65 @@ class CatalogueManager:
 
         print(f"Downloading catalogue for {faction_name}...")
 
+        # Create temporary directory for catalogues
+        temp_dir = tempfile.mkdtemp()
+
         try:
-            # Download the .cat file
+            # Download the main catalogue
             cat_url = GITHUB_RAW_BASE + cat_filename
             response = requests.get(cat_url, timeout=30)
             response.raise_for_status()
 
-            # Save to temporary file
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.cat', delete=False) as temp_cat:
-                temp_cat.write(response.text)
-                temp_cat_path = temp_cat.name
+            # Save main catalogue to temp directory
+            main_cat_path = os.path.join(temp_dir, cat_filename)
+            with open(main_cat_path, 'w') as f:
+                f.write(response.text)
 
+            # Download linked catalogues if needed
+            linked_catalogues = FACTION_LINKED_CATALOGUES.get(faction_name, [])
+            for linked_cat in linked_catalogues:
+                try:
+                    print(f"  Downloading linked catalogue: {linked_cat}...")
+                    linked_url = GITHUB_RAW_BASE + linked_cat
+                    linked_response = requests.get(linked_url, timeout=30)
+                    linked_response.raise_for_status()
+
+                    linked_path = os.path.join(temp_dir, linked_cat)
+                    with open(linked_path, 'w') as f:
+                        f.write(linked_response.text)
+                except Exception as e:
+                    print(f"  Warning: Could not download {linked_cat}: {e}")
+                    # Continue without this linked catalogue
+
+            # Parse with linked catalogues enabled
+            print(f"Parsing catalogue for {faction_name}...")
+            parser = CatalogueParser(main_cat_path, load_linked_catalogues=True)
+            catalogue_data = parser.parse_catalogue(include_linked=True)
+
+            print(f"✓ Catalogue parsed successfully")
+
+            # Cache the result to YAML for faster future loading
             try:
-                # Parse to dict in-memory
-                print(f"Parsing catalogue for {faction_name}...")
-                parser = CatalogueParser(temp_cat_path, load_linked_catalogues=False)
-                catalogue_data = parser.parse_catalogue()
+                yaml_path = self.get_yaml_path(faction_name)
+                with open(yaml_path, 'w') as f:
+                    yaml.dump(catalogue_data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+                print(f"✓ Catalogue cached to {yaml_path.name}")
+            except Exception as e:
+                print(f"  Warning: Could not cache catalogue: {e}")
 
-                print(f"✓ Catalogue parsed successfully")
-                return catalogue_data
-
-            finally:
-                # Clean up temp file
-                os.unlink(temp_cat_path)
+            return catalogue_data
 
         except requests.RequestException as e:
             print(f"Error downloading catalogue: {e}")
             return None
         except Exception as e:
             print(f"Error parsing catalogue: {e}")
+            import traceback
+            traceback.print_exc()
             return None
+        finally:
+            # Clean up temp directory
+            shutil.rmtree(temp_dir, ignore_errors=True)
 
     def get_catalogue_for_army(self, army_list_text: str) -> Optional[Dict]:
         """

@@ -475,22 +475,42 @@ class CheatSheetGenerator:
         return enriched
 
     def _normalize_weapon_name(self, name: str) -> str:
-        """Normalize weapon name for matching (lowercase, normalize special characters)"""
+        """Normalize weapon name for matching (lowercase, normalize special characters and spacing)"""
         # Convert to lowercase
         normalized = name.lower()
         # Normalize various dash/hyphen characters to regular hyphen
         normalized = normalized.replace('‑', '-').replace('–', '-').replace('—', '-')
         # Normalize quotes
         normalized = normalized.replace(''', "'").replace(''', "'").replace('"', '"').replace('"', '"')
+        # Normalize spacing - collapse multiple spaces and remove spaces around hyphens
+        normalized = ' '.join(normalized.split())
+        # Also create a version without spaces for compound words (e.g., "great axe" -> "greataxe")
+        # This helps match BattleScribe inconsistencies
         return normalized
 
     def _weapon_matches(self, weapon_name: str, selected_names: List[str]) -> bool:
         """Check if a weapon matches any selected weapon"""
         weapon_normalized = self._normalize_weapon_name(weapon_name)
+        weapon_no_spaces = weapon_normalized.replace(' ', '')  # Version without spaces for flexible matching
+
         for selected in selected_names:
             selected_normalized = self._normalize_weapon_name(selected)
-            if weapon_normalized == selected_normalized or weapon_normalized in selected_normalized or selected_normalized in weapon_normalized:
+            selected_no_spaces = selected_normalized.replace(' ', '')
+
+            # Try multiple matching strategies
+            # 1. Exact match (normalized)
+            if weapon_normalized == selected_normalized:
                 return True
+            # 2. Match without spaces (handles "great axe" vs "greataxe")
+            if weapon_no_spaces == selected_no_spaces:
+                return True
+            # 3. Substring match (for partial matches)
+            if weapon_normalized in selected_normalized or selected_normalized in weapon_normalized:
+                return True
+            # 4. Substring match without spaces
+            if weapon_no_spaces in selected_no_spaces or selected_no_spaces in weapon_no_spaces:
+                return True
+
         return False
 
     def _get_weapon_counts(self, unit: Dict[str, Any]) -> Dict[str, int]:
@@ -685,6 +705,10 @@ class CheatSheetGenerator:
                     transports.append(unit)
                 else:
                     unled_units.append(unit)
+
+        # Sort attached_groups to prioritize warlord-led groups first
+        # Warlord-led groups (warlord=True) should appear before non-warlord groups
+        attached_groups.sort(key=lambda g: not g['leader'].get('warlord', False))
 
         return {
             'unattached_characters': unattached_characters,
@@ -1515,21 +1539,9 @@ class CheatSheetGenerator:
             lines.append(f"| {stats.get('M', '-')} | {stats.get('T', '-')} | {stats.get('SV', '-')} | {stats.get('W', '-')} | {stats.get('LD', '-')} | {stats.get('OC', '-')} |")
             lines.append("")
 
-        # Helper function to check if weapon matches
+        # Helper function to check if weapon matches (use class method for consistency)
         def weapon_matches(catalogue_weapon_name: str, model_weapon_names: List[str]) -> bool:
-            cat_normalized = self._normalize_weapon_name(catalogue_weapon_name)
-            for model_name in model_weapon_names:
-                model_normalized = self._normalize_weapon_name(model_name)
-                if cat_normalized == model_normalized:
-                    return True
-                if model_normalized in cat_normalized or cat_normalized in model_normalized:
-                    exact_match_exists = any(
-                        self._normalize_weapon_name(w['name']) == model_normalized
-                        for w in all_weapons.get('ranged', []) + all_weapons.get('melee', [])
-                    )
-                    if not exact_match_exists:
-                        return True
-            return False
+            return self._weapon_matches(catalogue_weapon_name, model_weapon_names)
 
         # Helper function to get weapons for a model
         def get_model_weapons(model):
@@ -1718,21 +1730,9 @@ class CheatSheetGenerator:
         model_weapon_names = [w['name'] for w in model.get('weapons', [])]
         all_weapons = unit.get('weapons', {})
 
-        # Helper function
+        # Helper function (use class method for consistency)
         def weapon_matches(catalogue_weapon_name: str, model_weapon_names: List[str]) -> bool:
-            cat_normalized = self._normalize_weapon_name(catalogue_weapon_name)
-            for model_name in model_weapon_names:
-                model_normalized = self._normalize_weapon_name(model_name)
-                if cat_normalized == model_normalized:
-                    return True
-                if model_normalized in cat_normalized or cat_normalized in model_normalized:
-                    exact_match_exists = any(
-                        self._normalize_weapon_name(w['name']) == model_normalized
-                        for w in all_weapons.get('ranged', []) + all_weapons.get('melee', [])
-                    )
-                    if not exact_match_exists:
-                        return True
-            return False
+            return self._weapon_matches(catalogue_weapon_name, model_weapon_names)
 
         # Ranged weapons
         ranged_for_model = []
@@ -1775,21 +1775,9 @@ class CheatSheetGenerator:
         model_weapon_names = [w['name'] for w in model.get('weapons', [])]
         all_weapons = unit.get('weapons', {})
 
-        # Helper function
+        # Helper function (use class method for consistency)
         def weapon_matches(catalogue_weapon_name: str, model_weapon_names: List[str]) -> bool:
-            cat_normalized = self._normalize_weapon_name(catalogue_weapon_name)
-            for model_name in model_weapon_names:
-                model_normalized = self._normalize_weapon_name(model_name)
-                if cat_normalized == model_normalized:
-                    return True
-                if model_normalized in cat_normalized or cat_normalized in model_normalized:
-                    exact_match_exists = any(
-                        self._normalize_weapon_name(w['name']) == model_normalized
-                        for w in all_weapons.get('ranged', []) + all_weapons.get('melee', [])
-                    )
-                    if not exact_match_exists:
-                        return True
-            return False
+            return self._weapon_matches(catalogue_weapon_name, model_weapon_names)
 
         # Melee weapons
         melee_for_model = []
