@@ -738,14 +738,7 @@ class CheatSheetGenerator:
         if cheat_sheet.get('unit_attachments'):
             grouped = self._group_units_by_attachments(cheat_sheet)
 
-            # Unattached characters first
-            if grouped['unattached_characters']:
-                lines.append("## Characters")
-                lines.append("")
-                for char in grouped['unattached_characters']:
-                    self._format_unit_markdown(char, lines)
-
-            # Led units (leader + unit pairs)
+            # Led units first (leader + unit pairs, warlord-led first)
             if grouped['attached_groups']:
                 lines.append("## Led Units")
                 lines.append("")
@@ -757,14 +750,21 @@ class CheatSheetGenerator:
                     lines.append("")
                     self._format_unit_markdown(group['unit'], lines)
 
-            # Unled units
+            # Unattached characters second
+            if grouped['unattached_characters']:
+                lines.append("## Characters")
+                lines.append("")
+                for char in grouped['unattached_characters']:
+                    self._format_unit_markdown(char, lines)
+
+            # Unled units third
             if grouped['unled_units']:
                 lines.append("## Unled Units")
                 lines.append("")
                 for unit in grouped['unled_units']:
                     self._format_unit_markdown(unit, lines)
 
-            # Transports
+            # Transports last
             if grouped['transports']:
                 lines.append("## Transports")
                 lines.append("")
@@ -1339,14 +1339,7 @@ class CheatSheetGenerator:
         if cheat_sheet.get('unit_attachments'):
             grouped = self._group_units_by_attachments(cheat_sheet)
 
-            # Unattached characters first
-            if grouped['unattached_characters']:
-                html_parts.append('        <h2 class="section-title">Characters</h2>')
-                char_page_breaks = self._assign_page_groups(grouped['unattached_characters'])
-                for i, char in enumerate(grouped['unattached_characters']):
-                    html_parts.append(self._format_unit_html(char, is_character=True, page_break_class=char_page_breaks[i]))
-
-            # Led units (leader + unit pairs) - add CSS for grouping
+            # Led units first (leader + unit pairs, warlord-led first)
             if grouped['attached_groups']:
                 html_parts.append('        <h2 class="section-title">Led Units</h2>')
                 for group in grouped['attached_groups']:
@@ -1358,14 +1351,21 @@ class CheatSheetGenerator:
                     html_parts.append('            </div>')
                     html_parts.append('        </div>')
 
-            # Unled units
+            # Unattached characters second
+            if grouped['unattached_characters']:
+                html_parts.append('        <h2 class="section-title">Characters</h2>')
+                char_page_breaks = self._assign_page_groups(grouped['unattached_characters'])
+                for i, char in enumerate(grouped['unattached_characters']):
+                    html_parts.append(self._format_unit_html(char, is_character=True, page_break_class=char_page_breaks[i]))
+
+            # Unled units third
             if grouped['unled_units']:
                 html_parts.append('        <h2 class="section-title">Unled Units</h2>')
                 unit_page_breaks = self._assign_page_groups(grouped['unled_units'])
                 for i, unit in enumerate(grouped['unled_units']):
                     html_parts.append(self._format_unit_html(unit, is_character=False, page_break_class=unit_page_breaks[i]))
 
-            # Transports
+            # Transports last
             if grouped['transports']:
                 html_parts.append('        <h2 class="section-title">Transports</h2>')
                 transport_page_breaks = self._assign_page_groups(grouped['transports'])
