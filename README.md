@@ -20,9 +20,33 @@ A Python tool that converts BattleScribe army list exports into clean, printable
 
 ## Quick Start
 
-### 1. Generate a Cheat Sheet
+### Option 1: Web Application (Recommended)
 
 ```bash
+# Create a virtual environment
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the Flask web application
+python3 app.py
+# Then open http://localhost:5000 in your browser
+```
+
+The web app allows you to:
+- Paste BattleScribe army lists directly
+- Auto-detect faction and download catalogues
+- Select leader attachments via UI
+- Generate and preview cheat sheets instantly
+
+### Option 2: Command Line Tool
+
+```bash
+# Install dependencies
+pip install pyyaml
+
 # Basic usage
 python3 generate_cheat_sheet.py army_list.txt catalogues/space_wolves.yaml -o output.html
 
@@ -31,29 +55,40 @@ python3 generate_cheat_sheet.py army_list.txt catalogues/space_wolves.yaml -o ou
 python3 generate_cheat_sheet.py army_list.txt catalogues/space_wolves.yaml -o output.md -f markdown
 ```
 
-### 2. Preview HTML Output
-
-```bash
-python3 server.py
-# Then open http://localhost:8000 in your browser
-```
-
 ## Installation
 
 ### Prerequisites
 
 - Python 3.7+
-- PyYAML
+- pip (Python package installer)
+
+### Setup for Web Application
 
 ```bash
-pip install pyyaml
+# Clone the repository
+git clone https://github.com/bearded-bytes/warhammer-cheatsheet.git
+cd warhammer-cheatsheet
+
+# Create and activate virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install all dependencies
+pip install -r requirements.txt
+
+# Run the web application
+python3 app.py
 ```
 
-### Setup
+### Setup for Command Line Only
 
 ```bash
-# Clone or download this repository
+# Clone the repository
+git clone https://github.com/bearded-bytes/warhammer-cheatsheet.git
 cd warhammer-cheatsheet
+
+# Install minimal dependencies
+pip install pyyaml
 
 # You're ready to go!
 python3 generate_cheat_sheet.py --help
@@ -183,21 +218,30 @@ Character enhancements are displayed below the Keywords section:
 
 ```
 warhammer-cheatsheet/
+├── app.py                       # Flask web application
 ├── cheat_sheet_generator.py    # Main generator logic
 ├── army_list_parser.py         # Parses army list text
+├── catalogue_manager.py        # Manages faction catalogues
 ├── wh40k_parser.py              # BattleScribe XML to YAML converter
-├── generate_cheat_sheet.py     # CLI entry point
-├── server.py                    # Simple web server
-├── catalogues/                  # Faction data files
-│   ├── space_wolves.yaml
-│   ├── death_guard.yaml
+├── generate_cheat_sheet.py     # CLI entry point (deprecated)
+├── requirements.txt            # Python dependencies
+├── templates/                  # Flask HTML templates
+│   ├── index.html
+│   └── about.html
+├── static/                     # CSS and JavaScript
+│   ├── style.css
+│   └── script.js
+├── catalogues/                 # Faction data files
+│   ├── *.yaml (auto-downloaded)
 │   └── README.md
-├── examples/                    # Example army lists and outputs
-│   ├── space_wolves_example.txt
-│   ├── space_wolves_example.html
-│   ├── death_guard_example.txt
-│   └── death_guard_example.html
+├── docs/                       # Project documentation
+│   ├── README.md
+│   ├── PRODUCT_REQUIREMENTS.md
+│   ├── TECHNICAL_SPECIFICATION.md
+│   ├── IMPLEMENTATION_GUIDE.md
+│   └── DESIGN_DECISIONS.md
 ├── README.md
+├── DEPLOYMENT.md
 └── .gitignore
 ```
 
